@@ -1,0 +1,28 @@
+{
+  "incomesInfoData": [
+    {
+      "period": "Month",
+      "total": "0.00"
+    }
+  ],
+  "costsInfoData": [
+    {
+      "period": "Month",
+      "total": "0.00"
+    },
+    {
+      "period": "Week",
+      "total": "0.00"
+    },
+    {
+      "period": "Day",
+      "total": "0.00"
+    }
+  ],
+  "balanceInfoData": [
+    {
+      "period": "AllTime",
+      "total": "0.00"
+    }
+  ]
+}
