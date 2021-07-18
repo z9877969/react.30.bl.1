@@ -1,3 +1,5 @@
+import css from "./MainInfo.module.css";
+
 const MainInfo = ({
   title,
   currency,
@@ -6,7 +8,7 @@ const MainInfo = ({
   handleOpenTransaction,
 }) => {
   return (
-    <section>
+    <section className={css.container}>
       <h2>{title}</h2>
       <button onClick={() => handleOpenTransaction(transType)}>Add</button>
       <span>{currency}</span>

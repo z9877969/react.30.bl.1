@@ -1,27 +1,27 @@
 {
   "incomesInfoData": [
     {
-      "period": "Month",
+      "period": "Месяц",
       "total": "0.00"
     }
   ],
   "costsInfoData": [
     {
-      "period": "Month",
+      "period": "Месяц",
       "total": "0.00"
     },
     {
-      "period": "Week",
+      "period": "Неделя",
       "total": "0.00"
     },
     {
-      "period": "Day",
+      "period": "День",
       "total": "0.00"
     }
   ],
   "balanceInfoData": [
     {
-      "period": "AllTime",
+      "period": "Всё время",
       "total": "0.00"
     }
   ]
