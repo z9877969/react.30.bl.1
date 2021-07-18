@@ -1,0 +1,56 @@
+{
+  "costs": [
+    {
+      "date": "2021-07-18",
+      "time": "11:49",
+      "category": "",
+      "sum": "",
+      "currency": "UAH",
+      "comment": "",
+      "id": 1
+    }
+  ],
+  "incomes": [
+    {
+      "date": "2021-07-18",
+      "time": "11:49",
+      "category": "",
+      "sum": "",
+      "currency": "UAH",
+      "comment": "",
+      "id": 1
+    }
+  ],
+  "incomesCat": [
+    {
+      "name": "Зарплата",
+      "id": 1
+    },
+    {
+      "name": "Премия",
+      "id": 2
+    },
+    {
+      "name": "Бонус",
+      "id": 3
+    },
+    {
+      "name": "Лотерея",
+      "id": 4
+    }
+  ],
+  "costsCat": [
+    {
+      "name": "Еда",
+      "id": 3
+    },
+    {
+      "name": "Напитки",
+      "id": 4
+    },
+    {
+      "name": "Разное",
+      "id": 5
+    }
+  ]
+}
