@@ -6,7 +6,7 @@ import LabelInput from "../_share/LabelInput/LabelInput";
 const TransactionForm = ({
   dataForm,
   handleChangeDataForm,
-  handleToggleCatList,
+  handleOpenCatList,
   handlePostDataForm,
 }) => {
   const { date, time, category, sum, currency, comment } = dataForm;
@@ -29,7 +29,7 @@ const TransactionForm = ({
         value={time}
       />
       <LabelInput
-        cbOnClick={handleToggleCatList}
+        cbOnClick={handleOpenCatList}
         type="button"
         title="Category"
         name="category"

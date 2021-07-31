@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import moment from "moment";
+import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
 import TransactionFormHeader from "../TransactionFormHeader/TransactionFormHeader";
 import TransactionForm from "../TransactionForm/TransactionForm";
 import Section from "../_share/Section/Section";
@@ -12,16 +13,18 @@ import {
   getTransactionsCats,
   postTransactionCat,
 } from "../../utils/apiService";
+import { useParams } from "react-router-dom";
 
 const TransactionPage = ({
-  transType,
   incomesCat,
   costsCat,
-  handleCloseTransaction,
   handleAddTransaction,
   setCategory,
   setCategories,
 }) => {
+  const { push, location } = useHistory();
+  const match = useRouteMatch();
+  const { transType } = useParams();
   const [isCatList, setIsCatList] = useState(false);
   const [dataForm, setDataForm] = useState({
     date: moment().format("YYYY-MM-DD"),
@@ -35,10 +38,20 @@ const TransactionPage = ({
 
   const categories = transType === "incomes" ? incomesCat : costsCat;
 
+  const handleGoBack = () => push(location.state?.from || "/");
+  const handleOpenCatList = () =>
+    push({
+      pathname: "/transaction" + "/" + transType + "/cat-list",
+      state: { from: location },
+    });
+  const handleGoBackFromList = () => {
+    push(location.state?.from || "/");
+  };
+
   const handlePostDataForm = (e) => {
     e.preventDefault();
     handleAddTransaction({ transaction: dataForm, transType });
-    handleCloseTransaction();
+    handleGoBack();
   };
 
   const handleChangeDataForm = (e) => {
@@ -46,12 +59,10 @@ const TransactionPage = ({
     setDataForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleToggleCatList = () => setIsCatList((prev) => !prev);
-
   const handleChangeCategory = (e) => {
     const { name } = e.target;
     setDataForm((prev) => ({ ...prev, category: name }));
-    handleToggleCatList();
+    handleGoBackFromList();
   };
 
   const addCategory = (category) =>
@@ -83,29 +94,32 @@ const TransactionPage = ({
   return (
     <>
       <h1>TransactionPage</h1>
-      {!isCatList ? (
-        <Section>
-          <TransactionFormHeader
-            title={transType === "costs" ? "Расходы" : "Доходы"}
-            handleCloseTransaction={handleCloseTransaction}
-          />
-          <TransactionForm
-            dataForm={dataForm}
-            handlePostDataForm={handlePostDataForm}
-            handleToggleCatList={handleToggleCatList}
-            handleChangeDataForm={handleChangeDataForm}
-          />
-        </Section>
-      ) : (
-        <Section>
-          <TransactionsCategories
-            categories={categories}
-            handleToggleCatList={handleToggleCatList}
-            handleChangeCategory={handleChangeCategory}
-            addCategory={addCategory}
-          />
-        </Section>
-      )}
+      <Switch>
+        <Route path={match.path + "/cat-list"}>
+          <Section>
+            <TransactionsCategories
+              categories={categories}
+              handleGoBackFromList={handleGoBackFromList}
+              handleChangeCategory={handleChangeCategory}
+              addCategory={addCategory}
+            />
+          </Section>
+        </Route>
+        <Route path="/transaction/:transType">
+          <Section>
+            <TransactionFormHeader
+              title={transType === "costs" ? "Расходы" : "Доходы"}
+              handleGoBack={handleGoBack}
+            />
+            <TransactionForm
+              dataForm={dataForm}
+              handlePostDataForm={handlePostDataForm}
+              handleOpenCatList={handleOpenCatList}
+              handleChangeDataForm={handleChangeDataForm}
+            />
+          </Section>
+        </Route>
+      </Switch>
     </>
   );
 };

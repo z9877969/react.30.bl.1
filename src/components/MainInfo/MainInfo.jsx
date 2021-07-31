@@ -1,3 +1,4 @@
+import { useHistory } from "react-router-dom";
 import css from "./MainInfo.module.css";
 
 const MainInfo = ({
@@ -5,12 +6,22 @@ const MainInfo = ({
   currency,
   dataInfo,
   transType,
-  handleOpenTransaction,
+  // handleOpenTransaction,
 }) => {
+  const history = useHistory();
+
+  const handleOpenTransaction = () => {
+    const { location } = history;
+    const newLocation = {
+      pathname: "/transaction" + "/" + transType,
+      state: { surprize: "surprize", from: location },
+    };
+    history.push(newLocation);
+  };
   return (
     <section className={css.container}>
       <h2>{title}</h2>
-      <button onClick={() => handleOpenTransaction(transType)}>Add</button>
+      <button onClick={handleOpenTransaction}>Add</button>
       <span>{currency}</span>
       <ul>
         {dataInfo &&

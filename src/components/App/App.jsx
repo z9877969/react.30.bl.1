@@ -1,18 +1,20 @@
 import { useEffect, useState } from "react";
+import { Route, Switch } from "react-router-dom";
 import { getTransactions, postTransaction } from "../../utils/apiService";
 import MainPage from "../pages/MainPage";
 import TransactionPage from "../pages/TransactionPage";
+import TransactionsListPerPeriodPage from "../pages/TransactionsListPerPeriodPage";
 import "./App.css";
 
 const App = () => {
   const [incomes, setIncomes] = useState([]);
   const [costs, setCosts] = useState([]);
-  const [currentTransaction, setCurrentTransaction] = useState("");
+  // const [currentTransaction, setCurrentTransaction] = useState("");
   const [incomesCat, setIncomesCat] = useState([]);
   const [costsCat, setCostsCat] = useState([]);
 
-  const handleOpenTransaction = (transType) => setCurrentTransaction(transType);
-  const handleCloseTransaction = () => setCurrentTransaction("");
+  // const handleOpenTransaction = (transType) => setCurrentTransaction(transType);
+  // const handleCloseTransaction = () => setCurrentTransaction("");
 
   const handleAddTransaction = ({ transaction, transType }) => {
     transType === "incomes" &&
@@ -43,19 +45,29 @@ const App = () => {
   return (
     <>
       <h1>App</h1>
-      {!currentTransaction ? (
-        <MainPage handleOpenTransaction={handleOpenTransaction} />
-      ) : (
-        <TransactionPage
-          incomesCat={incomesCat}
-          costsCat={costsCat}
-          transType={currentTransaction}
-          handleCloseTransaction={handleCloseTransaction}
-          handleAddTransaction={handleAddTransaction}
-          setCategory={setCategory}
-          setCategories={setCategories}
+      {/* <Route
+        path="/"
+        render={(props) => (
+          <MainPage handleOpenTransaction={handleOpenTransaction} />
+        )}
+      />
+      <Route path="/" component={MainPage} /> */}
+      <Switch>
+        <Route path="/" exact component={MainPage} />
+        <Route path="/transaction/:transType">
+          <TransactionPage
+            incomesCat={incomesCat}
+            costsCat={costsCat}
+            handleAddTransaction={handleAddTransaction}
+            setCategory={setCategory}
+            setCategories={setCategories}
+          />
+        </Route>
+        <Route
+          path="/trans-list/:transType"
+          component={TransactionsListPerPeriodPage}
         />
-      )}
+      </Switch>
     </>
   );
 };

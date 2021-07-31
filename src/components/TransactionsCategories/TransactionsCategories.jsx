@@ -1,9 +1,10 @@
 import { useState } from "react";
+import { useHistory } from "react-router-dom";
 import Button from "../_share/Button/Button";
 
 const TransactionsCategories = ({
   categories,
-  handleToggleCatList,
+  handleGoBackFromList,
   handleChangeCategory,
   addCategory,
 }) => {
@@ -20,9 +21,11 @@ const TransactionsCategories = ({
     setCategory("");
   };
 
+  
+
   return (
     <>
-      <Button title="GoBack" cbOnClick={handleToggleCatList} />
+      <Button title="GoBack" cbOnClick={handleGoBackFromList} />
       <h2>Категории</h2>
       <ul>
         {categories.map((el) => (

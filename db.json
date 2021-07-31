@@ -19,6 +19,15 @@
       "currency": "UAH",
       "comment": "",
       "id": 1
+    },
+    {
+      "date": "2021-07-31",
+      "time": "03:55",
+      "category": "Лотерея",
+      "sum": "",
+      "currency": "UAH",
+      "comment": "",
+      "id": 2
     }
   ],
   "incomesCat": [
