@@ -1,30 +1,30 @@
 import { useEffect, useState } from "react";
 import { Route, Switch } from "react-router-dom";
+import { useDispatch } from "react-redux";
 import { getTransactions, postTransaction } from "../../utils/apiService";
 import MainPage from "../pages/MainPage";
 import TransactionPage from "../pages/TransactionPage";
 import TransactionsListPerPeriodPage from "../pages/TransactionsListPerPeriodPage";
+import {
+  getCosts,
+  getIncomes,
+} from "../../redux/transactions/transactionsOperations";
 import "./App.css";
 
 const App = () => {
-  const [incomes, setIncomes] = useState([]);
-  const [costs, setCosts] = useState([]);
-  // const [currentTransaction, setCurrentTransaction] = useState("");
+  const dispatch = useDispatch();
   const [incomesCat, setIncomesCat] = useState([]);
   const [costsCat, setCostsCat] = useState([]);
 
-  // const handleOpenTransaction = (transType) => setCurrentTransaction(transType);
-  // const handleCloseTransaction = () => setCurrentTransaction("");
-
   const handleAddTransaction = ({ transaction, transType }) => {
-    transType === "incomes" &&
-      postTransaction({ apiEnd: transType, transaction }).then((transaction) =>
-        setIncomes((prev) => [...prev, transaction])
-      );
-    transType === "costs" &&
-      postTransaction({ apiEnd: transType, transaction }).then((transaction) =>
-        setCosts((prev) => [...prev, transaction])
-      );
+    // transType === "incomes" &&
+    //   postTransaction({ apiEnd: transType, transaction }).then((transaction) =>
+    //     setIncomes((prev) => [...prev, transaction])
+    //   );
+    // transType === "costs" &&
+    //   postTransaction({ apiEnd: transType, transaction }).then((transaction) =>
+    //     setCosts((prev) => [...prev, transaction])
+    //   );
   };
 
   const setCategory = ({ transType, category }) => {
@@ -38,20 +38,12 @@ const App = () => {
   };
 
   useEffect(() => {
-    getTransactions("incomes").then((transactions) => setIncomes(transactions));
-    getTransactions("costs").then((transactions) => setCosts(transactions));
+    dispatch(getCosts());
+    dispatch(getIncomes());
   }, []);
 
   return (
     <>
-      <h1>App</h1>
-      {/* <Route
-        path="/"
-        render={(props) => (
-          <MainPage handleOpenTransaction={handleOpenTransaction} />
-        )}
-      />
-      <Route path="/" component={MainPage} /> */}
       <Switch>
         <Route path="/" exact component={MainPage} />
         <Route path="/transaction/:transType">

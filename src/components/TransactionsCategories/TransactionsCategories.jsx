@@ -6,7 +6,7 @@ const TransactionsCategories = ({
   categories,
   handleGoBackFromList,
   handleChangeCategory,
-  addCategory,
+  handlerAddCategory,
 }) => {
   const [category, setCategory] = useState("");
 
@@ -17,11 +17,9 @@ const TransactionsCategories = ({
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    addCategory({ name: category });
+    handlerAddCategory({ name: category });
     setCategory("");
   };
-
-  
 
   return (
     <>

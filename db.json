@@ -8,6 +8,33 @@
       "currency": "UAH",
       "comment": "",
       "id": 1
+    },
+    {
+      "date": "2021-08-14",
+      "time": "12:20",
+      "category": "Напитки",
+      "sum": "1000",
+      "currency": "UAH",
+      "comment": "321321321321321",
+      "id": 2
+    },
+    {
+      "date": "2021-08-14",
+      "time": "12:24",
+      "category": "Разное",
+      "sum": "1500",
+      "currency": "UAH",
+      "comment": "hjhjhjhjhjh",
+      "id": 3
+    },
+    {
+      "date": "2021-08-14",
+      "time": "02:05",
+      "category": "Спортзал",
+      "sum": "1000",
+      "currency": "UAH",
+      "comment": "",
+      "id": 4
     }
   ],
   "incomes": [
@@ -38,27 +65,27 @@
     {
       "name": "Премия",
       "id": 2
-    },
-    {
-      "name": "Бонус",
-      "id": 3
-    },
-    {
-      "name": "Лотерея",
-      "id": 4
     }
   ],
   "costsCat": [
     {
       "name": "Еда",
-      "id": 3
+      "id": 1
     },
     {
       "name": "Напитки",
-      "id": 4
+      "id": 2
     },
     {
       "name": "Разное",
+      "id": 3
+    },
+    {
+      "name": "Отдых",
+      "id": 4
+    },
+    {
+      "name": "Спортзал",
       "id": 5
     }
   ]

@@ -1,6 +1,13 @@
 import { useEffect, useState } from "react";
 import moment from "moment";
-import { Route, Switch, useHistory, useRouteMatch } from "react-router-dom";
+import {
+  Route,
+  Switch,
+  useHistory,
+  useRouteMatch,
+  useParams,
+} from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import TransactionFormHeader from "../TransactionFormHeader/TransactionFormHeader";
 import TransactionForm from "../TransactionForm/TransactionForm";
 import Section from "../_share/Section/Section";
@@ -13,18 +20,37 @@ import {
   getTransactionsCats,
   postTransactionCat,
 } from "../../utils/apiService";
-import { useParams } from "react-router-dom";
+import { addTransaction } from "../../redux/transactions/transactionsOperations";
+import {
+  getCategories,
+  getIsEmpty,
+} from "../../redux/categories/categoriesSelector";
+import {
+  getCostsCats,
+  getIncomesCats,
+  addCategory,
+} from "../../redux/categories/categoriesOperations";
+import {
+  getCostsCatEmpty,
+  getIncomesCatEmpty,
+} from "../../redux/categories/categoriesActions";
 
 const TransactionPage = ({
-  incomesCat,
-  costsCat,
-  handleAddTransaction,
+  // incomesCat,
+  // costsCat,
+  // handleAddTransaction,
   setCategory,
   setCategories,
 }) => {
+  const dispatch = useDispatch();
   const { push, location } = useHistory();
   const match = useRouteMatch();
   const { transType } = useParams();
+
+  const { incomesCat, costsCat } = useSelector(getCategories);
+  const { costs: isCostsEmpty, incomes: isIncomesEmpty } =
+    useSelector(getIsEmpty);
+
   const [isCatList, setIsCatList] = useState(false);
   const [dataForm, setDataForm] = useState({
     date: moment().format("YYYY-MM-DD"),
@@ -50,7 +76,7 @@ const TransactionPage = ({
 
   const handlePostDataForm = (e) => {
     e.preventDefault();
-    handleAddTransaction({ transaction: dataForm, transType });
+    dispatch(addTransaction({ transType, transaction: dataForm }));
     handleGoBack();
   };
 
@@ -65,31 +91,29 @@ const TransactionPage = ({
     handleGoBackFromList();
   };
 
-  const addCategory = (category) =>
-    postTransactionCat({ apiEnd: transType + "Cat", category }).then(
-      (category) => setCategory({ transType, category })
-    );
+  const handlerAddCategory = (category) =>
+    dispatch(addCategory({ transType, category }));
 
   useEffect(() => {
     transType === "incomes" &&
       incomesCat.length === 0 &&
-      getTransactionsCats("incomesCat").then((categories) => {
-        if (categories.length === 0) {
-          incomesCatOpts.forEach((category) => addCategory(category));
-        } else {
-          setCategories({ transType, categories });
-        }
-      });
-    transType === "costs" &&
-      costsCat.length === 0 &&
-      getTransactionsCats("costsCat").then((categories) => {
-        if (categories.length === 0) {
-          costsCatOpts.forEach((category) => addCategory(category));
-        } else {
-          setCategories({ transType, categories });
-        }
-      });
+      dispatch(getIncomesCats());
+
+    transType === "costs" && costsCat.length === 0 && dispatch(getCostsCats());
   }, []);
+
+  useEffect(() => {
+    isCostsEmpty &&
+      costsCatOpts.forEach((category, idx) => {
+        idx === 0 && dispatch(getCostsCatEmpty(false));
+        dispatch(addCategory({ transType, category }));
+      });
+    isIncomesEmpty &&
+      incomesCatOpts.forEach((category, idx) => {
+        idx === 0 && dispatch(getIncomesCatEmpty(false));
+        dispatch(addCategory({ transType, category }));
+      });
+  }, [isCostsEmpty, isIncomesEmpty]);
 
   return (
     <>
@@ -101,7 +125,7 @@ const TransactionPage = ({
               categories={categories}
               handleGoBackFromList={handleGoBackFromList}
               handleChangeCategory={handleChangeCategory}
-              addCategory={addCategory}
+              handlerAddCategory={handlerAddCategory}
             />
           </Section>
         </Route>
