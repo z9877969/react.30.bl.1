@@ -1,4 +1,5 @@
 import { getTransactions, postTransaction } from "../../utils/apiService";
+import { addTransactionApi, getTransactionsApi } from "../../utils/fireBaseApi";
 import {
   getCostsError,
   getCostsRequest,
@@ -14,35 +15,93 @@ import {
   addIncomesSuccess,
 } from "./transactionsActions";
 
-export const getCosts = () => (dispatch) => {
+import { getError } from "../error/errorHandler";
+
+export const getCosts = () => (dispatch, getStore) => {
   dispatch(getCostsRequest());
-  getTransactions("costs")
+
+  const {
+    auth: {
+      user: { idToken, localId },
+    },
+  } = getStore();
+  getTransactionsApi({
+    transType: "costs",
+    localId,
+    idToken,
+  })
     .then((transactions) => dispatch(getCostsSuccess(transactions)))
-    .catch((e) => dispatch(getCostsError(e.message)));
+    .catch((e) =>
+      dispatch(
+        getError({
+          error: e,
+          actionType: "transactions/getCostsError",
+          requestCb: getIncomes,
+          requestData: null,
+        })
+        // getCostsError(e.message))
+      )
+    );
 };
 
-export const getIncomes = () => (dispatch) => {
+export const getIncomes = () => (dispatch, getStore) => {
   dispatch(getIncomesRequest());
-  getTransactions("incomes")
-    .then((transactions) => dispatch(getIncomesSuccess(transactions)))
-    .catch((e) => dispatch(getIncomesError(e.message)));
+
+  const {
+    auth: {
+      user: { idToken, localId },
+    },
+  } = getStore();
+  getTransactionsApi({
+    transType: "incomes",
+    localId,
+    idToken,
+  })
+    .then((transactions) => {
+      dispatch(getIncomesSuccess(transactions));
+    })
+    .catch(
+      dispatch(
+        getError({
+          error: e,
+          actionType: "transactions/getIncomesError",
+          requestCb: getIncomes,
+          requestData: null,
+        })
+      )
+      // (e) => dispatch(getIncomesError(e.message))
+    );
 };
 
 export const addTransaction =
   ({ transType, transaction }) =>
-  (dispatch) => {
+  (dispatch, getStore) => {
     transType === "incomes" && dispatch(addIncomesRequest());
     transType === "costs" && dispatch(addCostsRequest());
 
-    postTransaction({ apiEnd: transType, transaction })
+    const {
+      auth: {
+        user: { idToken, localId },
+      },
+    } = getStore();
+
+    addTransactionApi({ transaction, transType, localId, idToken })
       .then((transaction) => {
         transType === "incomes"
           ? dispatch(addIncomesSuccess(transaction))
           : dispatch(addCostsSuccess(transaction));
       })
-      .catch((e) => {
-        transType === "incomes"
-          ? dispatch(addIncomesError(e.message))
-          : dispatch(addCostsError(e.message));
-      });
+      .catch((e) =>
+        dispatch(
+          getError({
+            error: e,
+            actionType:
+              transType === "incomes"
+                ? "transactions/addIncomesError"
+                : "transactions/addCostsError",
+            requestCb: addTransaction,
+            requestData: { transaction, transType, localId, idToken },
+          })
+        )
+      );
   };
